@@ -1,12 +1,13 @@
 import React from "react";
-import { ArrowDown, Code, BrainCircuit, Github } from "lucide-react";
+import { ArrowDown, Code, BrainCircuit } from "lucide-react";
 import { socialLinks } from "../../data/navigation";
 import * as LucideIcons from "lucide-react";
 
 const Hero: React.FC = () => {
   // Dynamic icon rendering
   const IconComponent = (iconName: string) => {
-    const Icon = (LucideIcons as any)[iconName];
+    const icons = LucideIcons as unknown as Record<string, React.ComponentType<{ size?: number }>>;
+    const Icon = icons[iconName];
     return Icon ? <Icon size={24} /> : null;
   };
 

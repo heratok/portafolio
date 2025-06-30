@@ -1,13 +1,14 @@
-import React from 'react';
-import { socialLinks } from '../../data/navigation';
-import * as LucideIcons from 'lucide-react';
+import React from "react";
+import { socialLinks } from "../../data/navigation";
+import * as LucideIcons from "lucide-react";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  
+
   // Dynamic icon rendering
   const IconComponent = (iconName: string) => {
-    const Icon = (LucideIcons as any)[iconName];
+    const icons = LucideIcons as unknown as Record<string, React.ComponentType<{ size?: number }>>;
+    const Icon = icons[iconName];
     return Icon ? <Icon size={20} /> : null;
   };
 
@@ -16,12 +17,14 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white">Portfolio</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+              Portfolio
+            </h3>
             <p className="mt-2 text-gray-600 dark:text-gray-400">
               Desarrollador web creativo y apasionado
             </p>
           </div>
-          
+
           <div className="flex space-x-4">
             {socialLinks.map((link) => (
               <a
@@ -37,16 +40,22 @@ const Footer: React.FC = () => {
             ))}
           </div>
         </div>
-        
+
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
           <p className="text-center text-gray-600 dark:text-gray-400">
-            © {currentYear} Tu Nombre. Todos los derechos reservados.
+            © {currentYear} Hector Rincon. Todos los derechos reservados.
           </p>
           <div className="mt-4 flex justify-center space-x-6">
-            <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+            <a
+              href="#"
+              className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+            >
               Política de privacidad
             </a>
-            <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+            <a
+              href="#"
+              className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+            >
               Términos de servicio
             </a>
           </div>

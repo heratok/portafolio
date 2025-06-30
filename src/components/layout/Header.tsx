@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Moon, Sun } from 'lucide-react';
-import { navItems } from '../../data/navigation';
+import React, { useState, useEffect } from "react";
+import { Menu, X, Moon, Sun } from "lucide-react";
+import { navItems } from "../../data/navigation";
 
 interface HeaderProps {
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   toggleTheme: () => void;
 }
 
@@ -16,20 +16,25 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       setScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm' : 'bg-transparent'
+        scrolled
+          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       } dark:text-white`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div>
-            <a href="#home" className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <a
+              href="#home"
+              className="text-2xl font-bold text-blue-600 dark:text-blue-400"
+            >
               Portfolio
             </a>
           </div>
@@ -48,9 +53,13 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             <button
               onClick={toggleTheme}
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
             >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
           </nav>
 
@@ -59,9 +68,13 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             <button
               onClick={toggleTheme}
               className="mr-4 text-gray-700 dark:text-gray-300"
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
             >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
