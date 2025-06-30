@@ -1,0 +1,58 @@
+import { Project } from '../types';
+
+export const projects: Project[] = [
+  {
+    id: '1',
+    title: 'E-Commerce Platform',
+    description: 'A full-stack e-commerce platform with product catalog, shopping cart, and payment integration.',
+    image: 'https://images.pexels.com/photos/6956/person-woman-apple-laptop.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    tags: ['React', 'Node.js', 'MongoDB', 'Express'],
+    demoLink: 'https://example.com/demo',
+    sourceLink: 'https://github.com/yourusername/ecommerce',
+  },
+  {
+    id: '2',
+    title: 'Task Management App',
+    description: 'A collaborative task management application with real-time updates and team workspaces.',
+    image: 'https://images.pexels.com/photos/2115217/pexels-photo-2115217.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    tags: ['React', 'Firebase', 'Tailwind CSS'],
+    demoLink: 'https://example.com/taskapp',
+    sourceLink: 'https://github.com/yourusername/taskapp',
+  },
+  {
+    id: '3',
+    title: 'Weather Dashboard',
+    description: 'An interactive weather dashboard with global forecasts, historical data, and visualization.',
+    image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    tags: ['JavaScript', 'APIs', 'Chart.js'],
+    demoLink: 'https://example.com/weather',
+    sourceLink: 'https://github.com/yourusername/weather',
+  },
+  {
+    id: '4',
+    title: 'Portfolio Website',
+    description: 'A responsive portfolio website to showcase projects and skills (the one you\'re viewing now).',
+    image: 'https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    tags: ['React', 'Tailwind CSS', 'Vite'],
+    demoLink: 'https://example.com/portfolio',
+    sourceLink: 'https://github.com/yourusername/portfolio',
+  },
+  {
+    id: '5',
+    title: 'Social Media Analytics',
+    description: 'A dashboard for analyzing social media metrics and engagement across platforms.',
+    image: 'https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    tags: ['React', 'Node.js', 'D3.js', 'APIs'],
+    demoLink: 'https://example.com/analytics',
+    sourceLink: 'https://github.com/yourusername/analytics',
+  },
+  {
+    id: '6',
+    title: 'Fitness Tracker',
+    description: 'A mobile-first fitness tracking application with workout plans and progress visualization.',
+    image: 'https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    tags: ['React Native', 'Firebase', 'Health APIs'],
+    demoLink: 'https://example.com/fitness',
+    sourceLink: 'https://github.com/yourusername/fitness',
+  },
+];
