@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
               <div className="absolute inset-0 bg-blue-600 dark:bg-blue-500 rounded-full opacity-10 animate-pulse"></div>
               <div className="absolute inset-4 bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 rounded-full opacity-80 flex items-center justify-center overflow-hidden">
                 <img
-                  src="/src/img/foto_page-0001.jpg"
+                  src="/img/foto_page-0001.jpg"
                   alt="Tu Nombre"
                   className="w-full h-full object-cover rounded-full"
                 />
