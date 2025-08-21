@@ -11,12 +11,12 @@ export const navItems: NavItem[] = [
 export const socialLinks: SocialLink[] = [
   {
     platform: 'GitHub',
-    url: 'https://github.com/yourusername',
+    url: 'https://github.com/heratok?tab=repositories',
     icon: 'Github',
   },
   {
     platform: 'LinkedIn',
-    url: 'https://linkedin.com/in/yourusername',
+    url: 'https://www.linkedin.com/in/hector-armando-rinc%C3%B3n-farelo-ba475a31a/',
     icon: 'Linkedin',
   },
   {
