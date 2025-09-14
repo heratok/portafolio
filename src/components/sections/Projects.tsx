@@ -67,23 +67,41 @@ const Projects: React.FC = () => {
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 w-full flex justify-between items-center">
-                    <div className="flex flex-wrap gap-1">
-                      {project.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 text-xs bg-blue-600/80 text-white rounded"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {project.tags.length > 3 && (
-                        <span className="px-2 py-1 text-xs bg-gray-700/80 text-white rounded">
-                          +{project.tags.length - 3}
-                        </span>
-                      )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end">
+                  <div className="p-4 w-full">
+                    <div className="mb-2">
+                      <span className="block text-xs font-semibold text-white mb-1">
+                        Tecnologías:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-1 text-xs bg-blue-600/80 text-white rounded"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
+                    {project.collaborators &&
+                      project.collaborators.length > 0 && (
+                        <div>
+                          <span className="block text-xs font-semibold text-white mb-1">
+                            Colaboradores:
+                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {project.collaborators.map((colab) => (
+                              <span
+                                key={colab}
+                                className="px-2 py-1 text-xs bg-gray-700/80 text-white rounded"
+                              >
+                                {colab}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>

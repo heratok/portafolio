@@ -6,6 +6,7 @@ export interface Project {
   tags: string[];
   demoLink?: string;
   sourceLink?: string;
+  collaborators?: string[];
 }
 
 export interface Skill {
