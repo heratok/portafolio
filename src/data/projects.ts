@@ -46,4 +46,13 @@ export const projects: Project[] = [
   demoLink: 'https://burger-page-snowy.vercel.app/',
     sourceLink: 'https://github.com/heratok/Burger-Page',
   },
+  {
+    id: '6',
+    title: 'Task Manager',
+    description: 'Aplicación web para gestión de tareas con funcionalidades CRUD, autenticación de usuarios y diseño responsivo. Permite crear, editar, eliminar y organizar tareas de manera eficiente.',
+    image: '/previews/task_manger.jpg',
+    tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
+    demoLink: 'https://tast-manager-six.vercel.app/',
+    sourceLink: 'https://github.com/heratok/tast_manager',
+  },
 ];
