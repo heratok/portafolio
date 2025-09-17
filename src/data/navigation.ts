@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
 export const socialLinks: SocialLink[] = [
   {
     platform: 'GitHub',
-    url: 'https://github.com/heratok?tab=repositories',
+    url: 'https://github.com/heratok',
     icon: 'Github',
   },
   {
