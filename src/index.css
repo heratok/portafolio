@@ -2,89 +2,293 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
-
 @layer base {
+  /* ---- Color tokens (OKLCH triplets, consumed via `oklch(var(--token))`) ---- */
+  :root {
+    --background: 0.99 0.004 95;
+    --foreground: 0.20 0.012 250;
+
+    --card: 1 0 0;
+    --card-foreground: 0.20 0.012 250;
+
+    --popover: 1 0 0;
+    --popover-foreground: 0.20 0.012 250;
+
+    --primary: 0.50 0.13 172;
+    --primary-foreground: 0.99 0.004 95;
+
+    --secondary: 0.96 0.005 95;
+    --secondary-foreground: 0.22 0.012 250;
+
+    --muted: 0.96 0.005 95;
+    --muted-foreground: 0.50 0.012 250;
+
+    --accent: 0.95 0.022 172;
+    --accent-foreground: 0.22 0.012 250;
+
+    --destructive: 0.55 0.20 27;
+    --destructive-foreground: 0.99 0.004 95;
+
+    --success: 0.58 0.14 155;
+    --success-foreground: 0.99 0.004 95;
+
+    --border: 0.91 0.005 95;
+    --input: 0.91 0.005 95;
+    --ring: 0.50 0.13 172;
+
+    /* Highlight surface — inverted tone of the page so it always reads as a
+       block of emphasis. In light mode it borrows the foreground ink, in dark
+       mode it borrows a soft teal-cream to keep contrast against the page. */
+    --highlight: 0.20 0.012 250;
+    --highlight-foreground: 0.99 0.004 95;
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 0.16 0.012 250;
+    --foreground: 0.96 0.004 95;
+
+    --card: 0.20 0.012 250;
+    --card-foreground: 0.96 0.004 95;
+
+    --popover: 0.20 0.012 250;
+    --popover-foreground: 0.96 0.004 95;
+
+    --primary: 0.72 0.14 172;
+    --primary-foreground: 0.18 0.012 250;
+
+    --secondary: 0.24 0.012 250;
+    --secondary-foreground: 0.96 0.004 95;
+
+    --muted: 0.24 0.012 250;
+    --muted-foreground: 0.66 0.012 250;
+
+    --accent: 0.27 0.040 172;
+    --accent-foreground: 0.96 0.004 95;
+
+    --destructive: 0.66 0.20 27;
+    --destructive-foreground: 0.99 0.004 95;
+
+    --success: 0.72 0.14 155;
+    --success-foreground: 0.18 0.012 250;
+
+    --border: 0.28 0.012 250;
+    --input: 0.28 0.012 250;
+    --ring: 0.72 0.14 172;
+
+    --highlight: 0.94 0.018 172;
+    --highlight-foreground: 0.18 0.012 250;
+  }
+
+  /* ---- Element resets ---- */
+  * {
+    border-color: oklch(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply font-sans antialiased text-gray-900 dark:text-white;
+    background-color: oklch(var(--background));
+    color: oklch(var(--foreground));
+    font-family: 'Manrope', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'ss01', 'ss02', 'cv11';
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: oklch(var(--foreground));
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: oklch(var(--primary) / 0.22);
+    color: oklch(var(--foreground));
+  }
+
+  /* Scrollbar — slim, themed, so the browser default doesn't ship with the design */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(var(--border));
+    border-radius: 999px;
+    border: 2px solid oklch(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(var(--muted-foreground) / 0.45);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(var(--border)) transparent;
+  }
+
+  /* Focus ring — visible without being loud */
+  :focus-visible {
+    outline: 2px solid oklch(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Inputs/textareas get their own focus (no double ring) */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  button:focus-visible {
+    outline: none;
   }
 }
 
-@layer components {
-  .animate-fadeIn {
-    animation: fadeIn 1s ease-in-out;
+@layer utilities {
+  /* Tabular numerals for dates, stats, prices */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-}
 
-@keyframes fadeIn {
-  from {
+  /* Soft spotlight — used in hero for atmospheric depth */
+  .bg-spotlight {
+    background:
+      radial-gradient(60% 50% at 50% 0%, oklch(var(--primary) / 0.10), transparent 70%),
+      radial-gradient(40% 35% at 80% 30%, oklch(var(--primary) / 0.06), transparent 70%);
+  }
+
+  /* Glow — same visual as a `bg-primary/20 blur-3xl` disc, but as a pure
+     radial-gradient. Zero filter cost, identical read on retina. */
+  .bg-glow-primary {
+    background: radial-gradient(
+      circle at center,
+      oklch(var(--primary) / 0.22),
+      oklch(var(--primary) / 0.08) 45%,
+      transparent 72%
+    );
+  }
+
+  /* Grain (very subtle) — only for hero / showcase surfaces if used */
+  .bg-noise {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Skeleton — works with the design system */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: oklch(var(--muted));
+    border-radius: var(--radius);
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(var(--background) / 0.7),
+      transparent
+    );
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* Reveal-on-scroll base — applied to anything with data-reveal */
+  [data-reveal] {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(14px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  to {
+  [data-reveal].is-revealed {
     opacity: 1;
     transform: translateY(0);
   }
-}
 
-@keyframes float {
-  0% {
+  /* Subtle hover lift used on interactive cards */
+  .lift {
+    transition:
+      transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+  }
+  .lift:active {
     transform: translateY(0);
   }
-  50% {
-    transform: translateY(-10px);
+
+  /* Highlight surface — tokenized, inverted from the page in both themes.
+     Uses --highlight and --highlight-foreground so a future theme change
+     only needs to update the tokens, not the call sites. */
+  .surface-highlight {
+    background-color: oklch(var(--highlight));
+    color: oklch(var(--highlight-foreground));
   }
-  100% {
-    transform: translateY(0);
+  .surface-highlight :is(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+  }
+
+  /* Pretty underline used in nav and prose links */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    transition: background-size 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
   }
 }
 
-/* For project cards */
-.grid-cols-1 > div,
-.grid-cols-2 > div,
-.grid-cols-3 > div {
-  animation: fadeIn 0.5s ease-in-out;
-  animation-fill-mode: both;
-}
+/* Reduced motion — respect the user's OS-level preference.
+   Strategy: kill DECORATIVE motion (entrance animations, marquees, data-reveal).
+   Keep short state-change transitions (hover, focus, theme) so the UI still
+   gives feedback — flipping everything to 0.001ms destroys useful state cues. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
-.grid-cols-1 > div:nth-child(1),
-.grid-cols-2 > div:nth-child(1),
-.grid-cols-3 > div:nth-child(1) {
-  animation-delay: 0.1s;
-}
+  /* Reveal-on-scroll: skip the fade/translate, show final state immediately. */
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 
-.grid-cols-1 > div:nth-child(2),
-.grid-cols-2 > div:nth-child(2),
-.grid-cols-3 > div:nth-child(2) {
-  animation-delay: 0.2s;
-}
+  /* Authored entrance / decorative animations — disabled. */
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-slide-in-right,
+  .animate-slide-out-right,
+  .animate-marquee,
+  .animate-shimmer,
+  .animate-accordion-down,
+  .animate-accordion-up,
+  [data-state='open']:is([data-radix-popper-content-wrapper], [data-radix-collection-item]),
+  [data-state='closed']:is([data-radix-popper-content-wrapper], [data-radix-collection-item]) {
+    animation: none !important;
+  }
 
-.grid-cols-1 > div:nth-child(3),
-.grid-cols-2 > div:nth-child(3),
-.grid-cols-3 > div:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.grid-cols-1 > div:nth-child(4),
-.grid-cols-2 > div:nth-child(4),
-.grid-cols-3 > div:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-.grid-cols-1 > div:nth-child(5),
-.grid-cols-2 > div:nth-child(5),
-.grid-cols-3 > div:nth-child(5) {
-  animation-delay: 0.5s;
-}
-
-.grid-cols-1 > div:nth-child(6),
-.grid-cols-2 > div:nth-child(6),
-.grid-cols-3 > div:nth-child(6) {
-  animation-delay: 0.6s;
+  /* The 6s float on the hero photo (Tailwind's animate- is not used here,
+     so we just neutralize any element opted in via a class). */
+  .animate-float {
+    animation: none !important;
+  }
 }

@@ -1,86 +1,161 @@
-import React, { useState } from "react";
-import { skills } from "../../data/skills";
-import * as LucideIcons from "lucide-react";
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Section } from '../layout/Section';
+import { Container } from '../layout/Container';
+import { SectionHeading } from '../layout/SectionHeading';
+import { useReveal } from '../../hooks/useReveal';
+import { IconByName } from '../ui/icon-by-name';
+import { skills } from '../../data/skills';
+import type { Skill } from '../../types';
 
-type SkillCategory = "all" | "frontend" | "backend" | "tools" | "other";
+type CategoryId = 'all' | Skill['category'];
+
+const categories: { id: CategoryId; label: string }[] = [
+  { id: 'all', label: 'Todo' },
+  { id: 'frontend', label: 'Frontend' },
+  { id: 'backend', label: 'Backend' },
+  { id: 'tools', label: 'Herramientas' },
+  { id: 'other', label: 'Otros' },
+];
+
+const categoryAccent: Record<Skill['category'], string> = {
+  frontend: 'bg-primary/10 text-primary',
+  backend: 'bg-accent text-accent-foreground',
+  tools: 'bg-secondary text-secondary-foreground',
+  other: 'bg-muted text-muted-foreground',
+};
 
 const Skills: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<SkillCategory>("all");
+  const [active, setActive] = React.useState<CategoryId>('all');
+  const ref = useReveal<HTMLDivElement>();
 
-  const categories = [
-    { id: "all", label: "Todos" },
-    { id: "frontend", label: "Frontend" },
-    { id: "backend", label: "Backend" },
-    { id: "tools", label: "Herramientas" },
-    { id: "other", label: "Otros" },
-  ];
-
-  const filteredSkills =
-    activeCategory === "all"
-      ? skills
-      : skills.filter((skill) => skill.category === activeCategory);
-
-  // Dynamic icon rendering
-  const IconComponent = (iconName: string) => {
-    const icons = LucideIcons as unknown as Record<string, React.ComponentType<{ size?: number }>>;
-    const Icon = icons[iconName];
-    return Icon ? <Icon size={24} /> : null;
-  };
+  const filtered = React.useMemo(
+    () => (active === 'all' ? skills : skills.filter((s) => s.category === active)),
+    [active]
+  );
 
   return (
-    <section
-      id="skills"
-      className="py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-500"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Mis Habilidades
-          </h2>
-          <div className="mt-2 h-1 w-24 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full"></div>
-          <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Un conjunto diverso de habilidades técnicas que me permiten
-            construir soluciones completas y escalables.
-          </p>
+    <Section id="skills" aria-label="Habilidades">
+      <Container ref={ref}>
+        <div data-reveal>
+          <SectionHeading
+            title="Un stack que conozco de verdad."
+            description="Tecnologías que uso a diario, no que intenté una vez. Cada una la elegí porque me resuelve un problema concreto."
+            align="center"
+          />
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id as SkillCategory)}
-              className={`px-4 py-2 rounded-full transition-colors duration-200 ${
-                activeCategory === category.id
-                  ? "bg-blue-600 dark:bg-blue-500 text-white"
-                  : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-              }`}
-            >
-              {category.label}
-            </button>
-          ))}
+        {/* Segmented filter */}
+        <div
+          data-reveal
+          role="tablist"
+          aria-label="Filtrar por categoría"
+          className="mt-10 mx-auto flex w-fit max-w-full flex-wrap items-center justify-center gap-1 rounded-full border border-border bg-card/60 p-1 shadow-soft-sm backdrop-blur-sm"
+          style={{ transitionDelay: '80ms' }}
+        >
+          {categories.map((c) => {
+            const isActive = active === c.id;
+            return (
+              <button
+                key={c.id}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActive(c.id)}
+                className={cn(
+                  'relative inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-medium',
+                  'transition-colors duration-200',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                  isActive
+                    ? 'text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 rounded-full bg-foreground"
+                  />
+                )}
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="relative inline-block h-1.5 w-1.5 rounded-full bg-background"
+                  />
+                )}
+                <span className="relative">{c.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Skills Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {filteredSkills.map((skill, index) => (
-            <div
+        {/* Skills grid */}
+        <ul
+          data-reveal
+          className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"
+          style={{ transitionDelay: '160ms' }}
+        >
+          {filtered.map((skill, i) => (
+            <li
               key={skill.name}
-              className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              data-reveal
+              style={{ transitionDelay: `${200 + i * 35}ms` }}
             >
-              <div className="text-blue-600 dark:text-blue-400 mb-4">
-                {IconComponent(skill.icon)}
-              </div>
-              <h3 className="text-center font-medium text-gray-900 dark:text-white">
-                {skill.name}
-              </h3>
-            </div>
+              <article
+                className={cn(
+                  'group relative flex h-full flex-col gap-3 rounded-lg border border-border bg-card p-4 sm:p-5',
+                  'transition-all duration-300 ease-out-expo',
+                  'hover:-translate-y-0.5 hover:border-foreground/15 hover:shadow-soft-md'
+                )}
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className={cn(
+                      'inline-flex h-9 w-9 items-center justify-center rounded-md transition-transform duration-300 ease-out-expo group-hover:scale-110',
+                      categoryAccent[skill.category]
+                    )}
+                    aria-hidden
+                  >
+                    <IconByName name={skill.icon} size={18} />
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 className="text-sm font-semibold tracking-tight text-foreground">
+                  {skill.name}
+                </h3>
+                <p className="mt-auto font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {categoryLabel(skill.category)}
+                </p>
+              </article>
+            </li>
           ))}
-        </div>
-      </div>
-    </section>
+        </ul>
+
+        {filtered.length === 0 && (
+          <p
+            data-reveal
+            className="mt-12 text-center text-sm text-muted-foreground"
+          >
+            No hay habilidades en esta categoría todavía.
+          </p>
+        )}
+      </Container>
+    </Section>
   );
 };
 
 export default Skills;
+
+function categoryLabel(c: Skill['category']) {
+  switch (c) {
+    case 'frontend':
+      return 'Frontend';
+    case 'backend':
+      return 'Backend';
+    case 'tools':
+      return 'Tools';
+    case 'other':
+      return 'Other';
+  }
+}

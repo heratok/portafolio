@@ -1,258 +1,275 @@
-import React, { useState } from "react";
-import { Send, Mail, MapPin, Phone } from "lucide-react";
+import * as React from 'react';
+import { Mail, MapPin, Phone, Send, CheckCircle2, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { Section } from '../layout/Section';
+import { Container } from '../layout/Container';
+import { SectionHeading } from '../layout/SectionHeading';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { useReveal } from '../../hooks/useReveal';
+import { cn } from '../../lib/utils';
+
+type Status =
+  | { kind: 'idle' }
+  | { kind: 'submitting' }
+  | { kind: 'success'; message: string }
+  | { kind: 'error'; message: string };
+
+const contactItems = [
+  {
+    icon: Mail,
+    label: 'Email',
+    value: 'hectorincon0502@gmail.com',
+    href: 'mailto:hectorincon0502@gmail.com',
+  },
+  {
+    icon: MapPin,
+    label: 'Ubicación',
+    value: 'Valledupar, Colombia',
+    href: 'https://www.google.com/maps?q=Valledupar%2C+Colombia',
+  },
+  {
+    icon: Phone,
+    label: 'Teléfono',
+    value: '+57 320 740 3002',
+    href: 'tel:+573207403002',
+  },
+] as const;
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const ref = useReveal<HTMLDivElement>();
+  const [form, setForm] = React.useState({ name: '', email: '', subject: '', message: '' });
+  const [status, setStatus] = React.useState<Status>({ kind: 'idle' });
 
-  const [status, setStatus] = useState<{
-    message: string;
-    type: "success" | "error" | null;
-  }>({
-    message: "",
-    type: null,
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const update =
+    (key: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Form validation
-    if (!formData.name || !formData.email || !formData.message) {
+
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       setStatus({
-        message: "Por favor, complete todos los campos requeridos.",
-        type: "error",
+        kind: 'error',
+        message: 'Por favor completá nombre, email y mensaje antes de enviar.',
       });
       return;
     }
 
-    // Simulate form submission
-    setStatus({
-      message: "Enviando...",
-      type: null,
-    });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      setStatus({
+        kind: 'error',
+        message: 'El email no parece válido. Revisalo y volvé a intentar.',
+      });
+      return;
+    }
 
-    // Mock API call
+    setStatus({ kind: 'submitting' });
+    // Simulated submit — wire to your backend / Formspree / Resend here.
     setTimeout(() => {
       setStatus({
-        message: "¡Mensaje enviado con éxito! Gracias por contactarme.",
-        type: "success",
+        kind: 'success',
+        message: '¡Mensaje enviado! Te respondo en menos de 24 horas.',
       });
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    }, 1500);
+      setForm({ name: '', email: '', subject: '', message: '' });
+    }, 1200);
   };
 
+  const isSubmitting = status.kind === 'submitting';
+
   return (
-    <section
-      id="contact"
-      className="py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-500"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Contactame
-          </h2>
-          <div className="mt-2 h-1 w-24 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full"></div>
-          <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            ¿Tienes un proyecto en mente o quieres hablar sobre tecnología?
-            Estoy aquí para ayudarte.
-          </p>
+    <Section id="contact" aria-label="Contacto">
+      <Container ref={ref}>
+        <div data-reveal>
+          <SectionHeading
+            title="¿Tenés algo en mente?"
+            description="Estoy disponible para proyectos freelance, oportunidades full-time y conversaciones sobre tecnología. Escribime y te respondo pronto."
+            align="center"
+          />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <div>
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Información de Contacto
-              </h3>
-
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 text-blue-600 dark:text-blue-400 mr-4">
-                    <Mail size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 dark:text-white">
-                      Email
-                    </h4>
+        <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-10">
+          {/* Left column: contact info + CTA */}
+          <div className="lg:col-span-2 flex flex-col gap-5">
+            <ul className="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+              {contactItems.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <li
+                    key={item.label}
+                    data-reveal
+                    style={{ transitionDelay: `${100 + i * 70}ms` }}
+                  >
                     <a
-                      href="mailto:tu@ejemplo.com"
-                      className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      href={item.href}
+                      target={item.href.startsWith('http') ? '_blank' : undefined}
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-secondary/50"
                     >
-                      hectorincon0502@gmail.com
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent text-accent-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
+                        <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      </span>
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                          {item.label}
+                        </span>
+                        <span className="truncate text-sm font-medium text-foreground">
+                          {item.value}
+                        </span>
+                      </span>
+                      <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all duration-300 ease-out-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
                     </a>
-                  </div>
-                </div>
+                  </li>
+                );
+              })}
+            </ul>
 
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 text-blue-600 dark:text-blue-400 mr-4">
-                    <MapPin size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 dark:text-white">
-                      Ubicación
-                    </h4>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Valledupar, Colombia
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 text-blue-600 dark:text-blue-400 mr-4">
-                    <Phone size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 dark:text-white">
-                      Teléfono
-                    </h4>
-                    <a
-                      href="tel:+525500000000"
-                      className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                    >
-                      +57 3207403002
-                    </a>
-                  </div>
-                </div>
+            {/* Availability card */}
+            <div
+              data-reveal
+              className="relative overflow-hidden rounded-xl border border-border surface-highlight p-6 shadow-soft-md"
+              style={{ transitionDelay: '320ms' }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 bg-glow-primary"
+              />
+              <div className="relative flex items-center gap-2 text-xs">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success/60" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+                </span>
+                <span className="font-mono uppercase tracking-[0.16em] opacity-70">
+                  Disponible
+                </span>
               </div>
-            </div>
-
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 p-8 rounded-lg shadow-md text-white">
-              <h3 className="text-2xl font-bold mb-4">¡Trabajemos Juntos!</h3>
-              <p className="mb-0">
-                Estoy disponible para proyectos freelance, oportunidades a
-                tiempo completo y colaboraciones. ¡No dudes en contactarme para
-                discutir cómo puedo ayudarte!
+              <h3 className="relative mt-3 text-lg font-semibold tracking-tight">
+                Trabajemos juntos.
+              </h3>
+              <p className="relative mt-2 text-sm leading-relaxed opacity-75">
+                Acepto proyectos cortos y medianos. Si tenés algo entre 2 y 12
+                semanas, escribime.
               </p>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Envíame un Mensaje
-            </h3>
-
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Nombre <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-800 dark:text-white"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Email <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-800 dark:text-white"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Asunto
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-800 dark:text-white"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Mensaje <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-800 dark:text-white resize-none"
-                  ></textarea>
-                </div>
-
-                {status.message && (
-                  <div
-                    className={`p-3 rounded-md ${
-                      status.type === "success"
-                        ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200"
-                        : status.type === "error"
-                        ? "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200"
-                        : "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200"
-                    }`}
-                  >
-                    {status.message}
-                  </div>
-                )}
-
-                <div>
-                  <button
-                    type="submit"
-                    className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-md transition-colors duration-300 flex items-center justify-center"
-                  >
-                    Enviar Mensaje
-                    <Send size={16} className="ml-2" />
-                  </button>
-                </div>
+          {/* Right column: form */}
+          <form
+            onSubmit={handleSubmit}
+            data-reveal
+            noValidate
+            className="lg:col-span-3 flex flex-col gap-5 rounded-xl border border-border bg-card p-6 sm:p-8"
+            style={{ transitionDelay: '180ms' }}
+            aria-busy={isSubmitting}
+          >
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="name">
+                  Nombre <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={form.name}
+                  onChange={update('name')}
+                  placeholder="Tu nombre"
+                  autoComplete="name"
+                  required
+                />
               </div>
-            </form>
-          </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="email">
+                  Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={update('email')}
+                  placeholder="tu@email.com"
+                  autoComplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="subject">Asunto</Label>
+              <Input
+                id="subject"
+                name="subject"
+                value={form.subject}
+                onChange={update('subject')}
+                placeholder="¿De qué se trata?"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="message">
+                Mensaje <span className="text-destructive">*</span>
+              </Label>
+              <Textarea
+                id="message"
+                name="message"
+                value={form.message}
+                onChange={update('message')}
+                placeholder="Contame un poco sobre el proyecto, plazos y objetivos."
+                rows={5}
+                required
+              />
+            </div>
+
+            {/* Status feedback */}
+            {status.kind === 'error' && (
+              <div
+                role="alert"
+                className="flex items-start gap-2.5 rounded-md border border-destructive/30 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive"
+              >
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{status.message}</span>
+              </div>
+            )}
+            {status.kind === 'success' && (
+              <div
+                role="status"
+                className="flex items-start gap-2.5 rounded-md border border-success/30 bg-success/10 px-3.5 py-2.5 text-sm text-foreground"
+              >
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                <span>{status.message}</span>
+              </div>
+            )}
+
+            <div className="mt-1 flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs text-muted-foreground">
+                Te respondo en menos de{' '}
+                <span className="font-medium text-foreground">24h</span>.
+              </p>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isSubmitting}
+                className={cn(isSubmitting && 'opacity-80')}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Enviando
+                  </>
+                ) : (
+                  <>
+                    Enviar mensaje
+                    <Send className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 };
 

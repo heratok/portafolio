@@ -20,13 +20,8 @@ export const socialLinks: SocialLink[] = [
     icon: 'Linkedin',
   },
   {
-    platform: 'Twitter',
-    url: 'https://twitter.com/yourusername',
-    icon: 'Twitter',
-  },
-  {
     platform: 'Email',
-    url: 'mailto:you@example.com',
+    url: 'mailto:hectorincon0502@gmail.com',
     icon: 'Mail',
   },
 ];
